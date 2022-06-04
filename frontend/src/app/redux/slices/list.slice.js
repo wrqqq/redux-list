@@ -8,7 +8,7 @@ const listSlice = createSlice({
   name: 'list',
   initialState: {
     list: [],
-    loading: false,
+    loading: true,
   },
   extraReducers: {
     [getList.pending]: (state, action) => {

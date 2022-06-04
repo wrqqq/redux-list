@@ -1,3 +1,4 @@
+import { Container } from '@mui/system'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
@@ -8,11 +9,13 @@ function App() {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getList())
-  }, [])
+  }, [dispatch])
   return (
-    <Routes>
-      <Route path="/" element={<MainList />} />
-    </Routes>
+    <Container fixed>
+      <Routes>
+        <Route path="/" element={<MainList />} />
+      </Routes>
+    </Container>
   )
 }
 
