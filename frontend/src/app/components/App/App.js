@@ -9,7 +9,7 @@ function App() {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getList())
-  }, [dispatch])
+  })
   return (
     <Container fixed>
       <Routes>

@@ -8,7 +8,13 @@ const listSlice = createSlice({
   name: 'list',
   initialState: {
     list: [],
+    filteredList: [],
     loading: true,
+  },
+  reducers: {
+    filterList: (state, action) => {
+      state.filteredList = action.payload
+    },
   },
   extraReducers: {
     [getList.pending]: (state, action) => {
@@ -23,5 +29,7 @@ const listSlice = createSlice({
     },
   },
 })
+
+export const { filterList } = listSlice.actions
 
 export default listSlice.reducer
