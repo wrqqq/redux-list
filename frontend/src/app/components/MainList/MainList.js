@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Progress from '../Progress/Progress'
-import { Box, Button, Divider, List, ListItem, ListItemText } from '@mui/material'
+import { Box, Button, Divider, Grid, List, ListItem, ListItemText, TextField } from '@mui/material'
 import DatePicker from 'react-datepicker/dist/react-datepicker'
 import { filterList } from '../../redux/slices/list.slice'
 
@@ -17,6 +17,7 @@ const style = {
 export default function MainList() {
   const dispatch = useDispatch()
   const { list, loading, filteredList } = useSelector((state) => state.list)
+  const [search, setSearch] = useState('')
   const [listData, setListData] = useState([])
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(null)
@@ -29,30 +30,24 @@ export default function MainList() {
   const onChange = (dates) => {
     const [start, end] = dates
     let resultProductData = []
-    console.log(start, end)
     setStartDate(start)
     setEndDate(end)
-    console.log(list)
     if (start && end) {
       resultProductData = list.data.filter((a) => {
         var date = new Date(a.date)
-        console.log(date)
         return date >= start && date <= end
       })
     }
-    console.log(resultProductData)
     dispatch(filterList(resultProductData))
     setListData(resultProductData)
     setClearDate(true)
-    //clearHandler()
-    //console.log(filteredList)
   }
 
   const clearHandler = () => {
     setListData(list.data)
     setClearDate(false)
     setStartDate(new Date(list.data[0]?.date))
-    setEndDate(new Date(list.data[list.data.length - 1]?.date))
+    setEndDate(null)
   }
 
   useEffect(() => {
@@ -61,17 +56,41 @@ export default function MainList() {
     }
   }, [list])
 
+  const inputHandler = (e) => {
+    setSearch(e.target.value)
+    setListData(list.data.filter((el) => el.title.includes(e.target.value)))
+  }
+
+  const clearInput = () => {
+    setSearch('')
+    setListData(list.data)
+  }
+
+  useEffect(() => {
+    console.log(filterList)
+  }, [filterList])
+
   return (
     <List sx={style} component="nav" aria-label="mailbox folders">
-      <DatePicker
-        selected={startDate}
-        onChange={onChange}
-        startDate={startDate}
-        endDate={endDate}
-        selectsRange
-        inline
-        isClearable={true}
-      />
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          <h3>Фильтровать по дате:</h3>
+          <DatePicker
+            selected={startDate}
+            onChange={onChange}
+            startDate={startDate}
+            endDate={endDate}
+            selectsRange
+            inline
+            isClearable={true}
+          />
+        </Grid>
+        <Grid xs={6}>
+          <h3>Поиск по тайтлу:</h3>
+          <TextField value={search} id="standard-basic" label="Standard" variant="standard" onChange={inputHandler} />
+          {search && <Button onClick={clearInput}>Очистить</Button>}
+        </Grid>
+      </Grid>
       {clearDate && <Button onClick={clearHandler}>Очистить</Button>}
       {loading ? (
         <Progress />
