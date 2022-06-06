@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker/dist/react-datepicker'
 import { sendPost } from '../../redux/slices/list.slice'
 import AddForm from '../AddForm/AddForm'
 import moment from 'moment'
-import { getList } from '../../redux/slices/list.slice'
+import { getList, deletePost } from '../../redux/slices/list.slice'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { Link } from 'react-router-dom'
@@ -66,6 +66,10 @@ export default function MainList() {
   const inputHandler = (e) => {
     setSearch(e.target.value)
     setListData(posts.filter((el) => el.title.includes(e.target.value)))
+  }
+
+  const deletePostHandler = (id) => {
+    dispatch(deletePost(id))
   }
 
   const clearInput = () => {
@@ -129,14 +133,22 @@ export default function MainList() {
         ) : (
           listData?.map((el) => {
             return (
-              <Link key={el.id} to={'posts/' + el.id}>
-                <Box>
-                  <ListItem button>
+              <Box key={el.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <ListItem button>
+                  <Link to={'posts/' + el.id}>
                     <ListItemText primary={el.title} />
-                  </ListItem>
-                  <Divider />
-                </Box>
-              </Link>
+                  </Link>
+                </ListItem>
+                <Button
+                  style={{ width: '180px' }}
+                  variant="outlined"
+                  color="error"
+                  onClick={() => deletePostHandler(el.id)}
+                >
+                  Удалить пост
+                </Button>
+                <Divider />
+              </Box>
             )
           })
         )}

@@ -46,7 +46,13 @@ const listSlice = createSlice({
     error: false,
     loading: true,
   },
-  reducers: {},
+  reducers: {
+    deletePost: (state, action) => {
+      state.posts = state.posts.filter((el) => {
+        return el.id !== action.payload
+      })
+    },
+  },
   extraReducers: {
     [getList.pending]: (state) => {
       state.loading = true
@@ -91,5 +97,7 @@ const listSlice = createSlice({
     },
   },
 })
+
+export const { deletePost } = listSlice.actions
 
 export default listSlice.reducer

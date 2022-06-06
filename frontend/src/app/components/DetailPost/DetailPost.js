@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux/es'
 import { Link, useParams } from 'react-router-dom'
-import { getComments, getPost } from '../../redux/slices/list.slice'
+import { deletePost, getComments, getPost } from '../../redux/slices/list.slice'
 import { Button } from '@mui/material'
 import { useState } from 'react'
 
@@ -18,6 +18,10 @@ export default function DetailPost() {
   const commentsHandler = (id) => {
     dispatch(getComments(id))
     setOpenComments(!openComments)
+  }
+
+  const deletePostHandler = (id) => {
+    dispatch(deletePost(id))
   }
 
   return (
