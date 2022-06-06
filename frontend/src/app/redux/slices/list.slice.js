@@ -1,35 +1,76 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-export const getList = createAsyncThunk('list', async () => {
-  return fetch('/api/article').then((res) => res.json())
+export const getList = createAsyncThunk('list/getList', async () => {
+  return await fetch('/api/article').then((res) => {
+    return res.json().then((data) => {
+      return data.data
+    })
+  })
+})
+
+export const sendPost = createAsyncThunk('list/sendPost', async (post) => {
+  const rawResponse = await fetch('api/article', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(post),
+  })
+  const content = await rawResponse.json()
+  return content
+})
+
+export const getPost = createAsyncThunk('list/getPost', async (id) => {
+  return await fetch(`/api/article/${id}`).then((res) => {
+    return res.json().then((data) => {
+      return data
+    })
+  })
 })
 
 const listSlice = createSlice({
   name: 'list',
   initialState: {
-    list: [],
-    filteredList: [],
+    posts: [],
+    singlePost: {},
+    error: false,
     loading: true,
   },
-  reducers: {
-    filterList: (state, action) => {
-      state.filteredList = action.payload
-    },
-  },
+  reducers: {},
   extraReducers: {
-    [getList.pending]: (state, action) => {
+    [getList.pending]: (state) => {
       state.loading = true
     },
     [getList.fulfilled]: (state, action) => {
       state.loading = false
-      state.list = action.payload
+      state.posts = action.payload
     },
-    [getList.rejected]: (state, action) => {
+    [getList.rejected]: (state) => {
+      state.loading = false
+      state.error = true
+    },
+    [sendPost.pending]: (state) => {
+      state.loading = true
+    },
+    [sendPost.fulfilled]: (state, action) => {
+      state.loading = false
+      state.posts.push(action.payload)
+    },
+    [sendPost.rejected]: (state) => {
+      state.loading = false
+    },
+    [getPost.pending]: (state) => {
+      state.loading = true
+    },
+    [getPost.fulfilled]: (state, action) => {
+      state.loading = false
+      state.singlePost = action.payload
+    },
+    [getPost.rejected]: (state) => {
       state.loading = false
     },
   },
 })
-
-export const { filterList } = listSlice.actions
 
 export default listSlice.reducer
