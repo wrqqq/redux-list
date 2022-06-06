@@ -29,7 +29,7 @@ export default function MainList() {
   const [dialogOpen, setDialogOpen] = useState(false)
   useEffect(() => {
     dispatch(getList())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     setListData(posts)
@@ -129,8 +129,8 @@ export default function MainList() {
         ) : (
           listData?.map((el) => {
             return (
-              <Link to={'posts/' + el.id}>
-                <Box key={el.id}>
+              <Link key={el.id} to={'posts/' + el.id}>
+                <Box>
                   <ListItem button>
                     <ListItemText primary={el.title} />
                   </ListItem>

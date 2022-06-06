@@ -29,11 +29,20 @@ export const getPost = createAsyncThunk('list/getPost', async (id) => {
   })
 })
 
+export const getComments = createAsyncThunk('list/getComments', async (id) => {
+  return await fetch(`/api/comment?article=${id}`).then((res) => {
+    return res.json().then((data) => {
+      return data
+    })
+  })
+})
+
 const listSlice = createSlice({
   name: 'list',
   initialState: {
     posts: [],
     singlePost: {},
+    comments: [],
     error: false,
     loading: true,
   },
@@ -68,6 +77,16 @@ const listSlice = createSlice({
       state.singlePost = action.payload
     },
     [getPost.rejected]: (state) => {
+      state.loading = false
+    },
+    [getComments.pending]: (state) => {
+      state.loading = true
+    },
+    [getComments.fulfilled]: (state, action) => {
+      state.loading = false
+      state.comments = action.payload
+    },
+    [getComments.rejected]: (state) => {
       state.loading = false
     },
   },
