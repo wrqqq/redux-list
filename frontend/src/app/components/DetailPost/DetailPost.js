@@ -16,7 +16,6 @@ export default function DetailPost() {
   }, [dispatch, id])
 
   const commentsHandler = (id) => {
-    console.log(`id`, id)
     dispatch(getComments(id))
     setOpenComments(!openComments)
   }
